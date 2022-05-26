@@ -1,0 +1,19 @@
+---
+- name: Find folder path of an existing virtual machine
+  hosts: localhost
+  gather_facts: False
+  vars:
+    ansible_python_interpreter: "/usr/bin/env python3"
+  tasks:
+    - set_fact:
+        vm_name: "custom_win"
+
+    - name: "Find folder for VM - {{ vm_name }}"
+      vmware_guest_find:
+        hostname: "vcsa-01.lab.com"
+        username: "administrator@vsphere.local"
+        password: "Password1!"
+        validate_certs: False
+        name: "{{ vm_name }}"
+      delegate_to: localhost
+      register: vm_facts
