@@ -76,7 +76,7 @@
 #      - Restart sssd
 
     - name: SSSD config file
-      community.general.ini_file:
+      ini_file:
         path: /etc/sssd/sssd.conf
         section: "domain/lab.com"
         option: "{{item.key}}"
