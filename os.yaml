@@ -24,7 +24,7 @@
   tasks:   
 
     - set_fact:
-        host_name: "{{ ansible_hostname }}.lab.com"  
+        host_name: "{{ ansible_hostname }}.{{ domain_dc }}"  
     
     - name: Set a hostname specifying strategy
       ansible.builtin.hostname:
@@ -47,6 +47,7 @@
     - name: Check realm
       command: realm list
       register: joined
+      changed_when: False
 
     - name: Print REALM
       debug:
