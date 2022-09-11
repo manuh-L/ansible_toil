@@ -1,6 +1,6 @@
 ---
 
-- name: Join AD
+- name: Set fqdn + Join AD
   hosts: all
   gather_facts: yes
   vars:
@@ -26,7 +26,7 @@
     - set_fact:
         host_name: "{{ ansible_hostname }}.{{ domain_dc }}"  
     
-    - name: Set a hostname specifying strategy
+    - name: Set a hostname
       ansible.builtin.hostname:
         name: "{{ host_name }}"
         use: systemd
