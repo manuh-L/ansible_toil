@@ -1,0 +1,52 @@
+---
+
+- name: SFTP user creation
+  hosts: "{{ server }}"
+  become: true
+  become_user: root
+  vars:
+    - group: "sftp-local"
+    - path: "/sftp_home/"
+
+ 
+  tasks:
+  
+    - name: Ensure groups exists
+      ansible.builtin.group:
+        name: "{{ group }}"
+        state: present
+
+    - name: Generate random idempotent password
+      ansible.builtin.set_fact:
+        password: "{{ lookup('password', '/dev/null chars=ascii_letters,digits,punctuation') }}"
+        encrypt: md5_crypt
+      no_log: True
+
+    - name: Create sftp User
+      ansible.builtin.user:
+        name: "{{ username }}"
+        groups: "{{ group }}"
+        comment: "{{ comment }}"
+        password: "{{ password }}"
+        update_password: on_create
+        password_expire_max: 365
+        append: yes
+
+
+    - name: Create a directory for sftp users if it does not exist
+      file:
+        path: "{{ path }}/{{ group }}/{{ username }}"
+        state: directory
+        mode: '0755'
+        owner: root
+        group: root
+
+    - name: Creating SFTP dir for Jail
+      file:
+        path: "{{ path }}/{{ group }}/{{ username }}/{{ item }}"
+        state: directory
+        owner: root
+        group: "{{ username }}"
+        mode: u=rwx,g+rwxs,o-rwx
+      with_items:
+        - "{{ folders.split('\n') }}"
