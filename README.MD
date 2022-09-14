@@ -1,5 +1,5 @@
 
-# This playbooks are examples for my blog posts
+# This playbooks are examples for my ansible blog posts
 <p> Playbooks tested with Ansible AWX 21.0.1 and ansible [core 2.13.2] </p>
 
 * os: sets fqdn and joins AD
