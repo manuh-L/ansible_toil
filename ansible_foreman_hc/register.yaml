@@ -1,0 +1,33 @@
+---
+- name: Register host to Foreman and add to a host collection
+  hosts: all
+  gather_facts: yes
+  vars:
+    organization: "Lab"
+    server_foreman: "form-it-dc-01.lab.com"
+
+
+  tasks:
+
+    - name: Get host team
+      shell: hostname | awk '{print substr($0,6,2)}'
+      register: team
+      changed_when: False
+
+
+    - name: Get site
+      shell: site=$(hostname | awk '{print substr($0,9,2)}');[[ $site == 'dc' ]] && echo "DC" || echo "DR"
+      register: site
+      changed_when: False
+
+
+    - name: Register host
+      community.general.redhat_subscription:
+        state: present
+        consumer_name: "{{ ansible_fqdn }}"
+        activationkey: "{{ team.stdout | upper }}_{{ site.stdout }}"
+        org_id: "{{ organization }}"
+        server_hostname: "{{ server_foreman }}"
+        server_insecure: enable
+        rhsm_baseurl: https://form-it-dc-01.lab.com/pulp/repos
+      register: subscrition_process
