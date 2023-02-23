@@ -1,0 +1,63 @@
+- name: Decomission from puppet & forema/katello
+  hosts: all
+  vars:
+    node: "rcsa-it-dc-01.lab.com"
+    token: "0Rl1vQtZOD2ntoQ36tlNe0ujTM5WSIdWpmHvmGT1on6o"
+    tstamp: "{{ lookup('pipe', 'date --iso-8601=seconds') }}"
+    user: "admin"
+    pwd: Password1
+    katello_server_url: "https://form-it-dc-01.lab.com"
+    puppet_server_url: "https://puppet.lab.com:8081/pdb"
+    organization: Lab
+  tasks:
+
+    - name: Deativate node
+      uri:
+        url: "{{ puppet_server_url }}/cmd/v1"
+        method: POST
+        body_format: json
+        validate_certs: no
+        headers:
+          Accept: application/json
+          Content-Type: application/json
+          X-Authentication: "{{ token }}"
+        body:
+          command: deactivate node
+          version: 3
+          payload:
+            certname: "{{ node }}"
+            producer_timestamp: "{{ tstamp }}"
+      register: result
+      changed_when: result.status == 200
+
+
+    - name: Delete note from puppet
+      uri:
+        url: "{{ puppet_server_url }}/admin/v1/cmd"
+        method: POST
+        body_format: json
+        validate_certs: no
+        headers:
+          Accept: application/json
+          Content-Type: application/json
+          X-Authentication: "{{ token }}"
+        body:
+          command: delete
+          version: 1
+          payload:
+            certname: "{{ node }}"
+      register: result
+      changed_when: result.status == 200
+
+#    - name: Print response body
+#      debug:
+#        var: result.json
+
+    - name: remove host from foreman/katello
+      theforeman.foreman.host:
+          username: "{{ user }}"
+          password: "{{ pwd }}"
+          server_url: "{{ katello_server_url }}"
+          organization: "{{ organization }}"
+          name: "{{ node }}"
+          state: absent
