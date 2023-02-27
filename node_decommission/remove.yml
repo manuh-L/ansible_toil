@@ -65,7 +65,9 @@
 
 - name: DNS
   hosts: dns
-    
+  vars:
+    node: "rcsa-it-dc-01"    
+    domain: "lab.com" 
   tasks:
     - name: Remove DNS Record
       community.windows.win_dns_record:
