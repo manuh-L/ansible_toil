@@ -63,9 +63,11 @@
           name: "{{ node }}.{{ domain }}"
           state: absent
 
-
+- name: DNS
+  hosts: dns
+    
+  tasks:
     - name: Remove DNS Record
-      hosts: dns
       community.windows.win_dns_record:
         name: "{{ node }}.{{ domain }}"
         type: "A"
