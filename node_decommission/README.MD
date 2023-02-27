@@ -1,0 +1,1 @@
+Decommission Node From puppet & katello

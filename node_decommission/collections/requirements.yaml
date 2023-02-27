@@ -1,0 +1,6 @@
+---
+collections:
+- community.general
+- theforeman.foreman
+- community.windows
+- community.vmware

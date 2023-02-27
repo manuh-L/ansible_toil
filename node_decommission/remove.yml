@@ -61,3 +61,11 @@
           organization: "{{ organization }}"
           name: "{{ node }}"
           state: absent
+
+
+    - name: Remove DNS Record
+      community.windows.win_dns_record:
+        name: "rex.lab.com"
+        type: "A"
+        state: absent
+        zone: "lab.com"
