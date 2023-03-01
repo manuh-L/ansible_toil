@@ -13,7 +13,7 @@ Windows Server 2019
 The playbook receives the node/server to be decommissioned and proceeds with the shutdown of the Server, removal from puppet, Foreman/Katello and DNS server
 
 Permissions:
-- Puppet user with autentication token generated and permission do 
+- Puppet user with autentication token generated and API permission
 - Foreman user with permission do delete hosts
 - Windows AD user with permission to delete DNS records 
 - vCenter server user with permission to shutdown guest
