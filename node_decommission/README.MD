@@ -3,8 +3,8 @@
 <p>Tested with:</p>
 
 ```
+Ansible AWX 21
 Puppet Enterprise 2021.6
-AWX 21
 vCenter Server 7
 Windows Server 2019
 ```
