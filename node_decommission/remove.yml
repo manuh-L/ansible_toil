@@ -1,12 +1,12 @@
 - name: Decomission from puppet & forema/katello
-  hosts: all
+  hosts: localhost
   vars:
-    node: "rcsa-it-dc-01"
+    node: "{{ node }}" #"rcsa-it-dc-01"
     token: "0Rl1vQtZOD2ntoQ36tlNe0ujTM5WSIdWpmHvmGT1on6o"
     tstamp: "{{ lookup('pipe', 'date --iso-8601=seconds') }}"
     user: "admin"
     pwd: Password1
-    domain: "lab.com"
+    domain: "{{domain}}" #"lab.com"
     katello_server_url: "https://form-it-dc-01.lab.com"
     puppet_server_url: "https://puppet.lab.com:8081/pdb"
     organization: Lab
@@ -56,6 +56,7 @@
 
     - name: remove host from foreman/katello
       theforeman.foreman.host:
+          validate_certs: false
           username: "{{ user }}"
           password: "{{ pwd }}"
           server_url: "{{ katello_server_url }}"
@@ -63,15 +64,26 @@
           name: "{{ node }}.{{ domain }}"
           state: absent
 
+    - name: Shutdown "{{ ansible_hostname }}""
+      community.vmware.vmware_guest_powerstate:
+        hostname: "{{vcenter}}"
+        username: "{{vc_user}}"
+        password: "{{vc_pwd}}"
+        name: "{{ node | upper}}" #assuming that vm name is in uppercase
+        state: shutdown-guest
+        validate_certs: false
+      delegate_to: localhost
+      register: deploy  
+
 - name: DNS
-  hosts: dns
-  vars:
-    node: "rcsa-it-dc-01"    
-    domain: "lab.com" 
+  hosts: "{{ dc }}"
+#  vars:
+#    node: "rcsa-it-dc-01"    
+#    domain: "lab.com" 
   tasks:
     - name: Remove DNS Record
       community.windows.win_dns_record:
-        name: "{{ node }}.{{ domain }}"
+        name: "{{ node }}"
         type: "A"
         state: absent
         zone: "{{ domain }}"
