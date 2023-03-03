@@ -18,6 +18,12 @@ Permissions:
 - Windows AD user with permission to delete DNS records 
 - vCenter server user with permission to shutdown guest
 
+### Related posts:
+
+[Automation: node decommission , vCenter, puppet, foreman & DNS](https://virtualclusterit.com/2023/03/03/automation-node-decommission-vcenter-puppet-foreman-amp-dns/)
+## [DEMO](https://www.youtube.com/watch?v=bJ37diR94Z0)
+[![DEMO: Watch the video](https://i.imgur.com/JBmbq1l.png)](https://www.youtube.com/watch?v=bJ37diR94Z0)
+
 ### To do
 1. Accept list of nodes as input
 2. Backup & remove server from vCenter
